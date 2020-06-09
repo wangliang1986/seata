@@ -19,6 +19,30 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <!--资源上传库管理-->
+    <distributionManagement>
+        <repository>
+            <id>kt-nexus-releases</id>
+            <url>http://www.kingtsoft.com:33084/nexus/content/repositories/releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>kt-nexus-snapshots</id>
+            <url>http://www.kingtsoft.com:33084/nexus/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+    <!--
+    <distributionManagement>
+        <repository>
+            <id>kt-nexus-releases2</id>
+            <url>http://10.1.51.186:8081/nexus/content/repositories/releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>kt-nexus-snapshots2</id>
+            <url>http://10.1.51.186:8081/nexus/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+    -->
+
     <groupId>io.seata</groupId>
     <artifactId>seata-parent</artifactId>
     <version>${revision}</version>
