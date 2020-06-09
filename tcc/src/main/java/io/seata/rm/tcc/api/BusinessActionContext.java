@@ -99,6 +99,34 @@ public class BusinessActionContext implements Serializable {
     }
 
     /**
+     * Put data to actionContext
+     *
+     * @param key
+     * @param value
+     */
+    public void putData(String key, Object value) {
+        this.actionContext.put(key, value);
+    }
+
+    /**
+     * Put dataMap to actionContext
+     *
+     * @param dataMap
+     */
+    public void putData(Map<String, Object> dataMap) {
+        this.actionContext.putAll(dataMap);
+    }
+
+    /**
+     * Get data from actionContext
+     *
+     * @param key
+     */
+    public <T> T getData(String key) {
+        return (T)this.actionContext.get(key);
+    }
+
+    /**
      * Gets xid.
      *
      * @return the xid
