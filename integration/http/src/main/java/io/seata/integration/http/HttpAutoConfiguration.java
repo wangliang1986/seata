@@ -41,7 +41,7 @@ import java.util.List;
  *
  * @author wangxb
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class HttpAutoConfiguration implements WebMvcConfigurer {
 
 

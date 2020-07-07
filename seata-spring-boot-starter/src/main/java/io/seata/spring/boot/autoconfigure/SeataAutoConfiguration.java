@@ -40,7 +40,7 @@ import static io.seata.spring.annotation.datasource.AutoDataSourceProxyRegistrar
  */
 @ComponentScan(basePackages = "io.seata.spring.boot.autoconfigure.properties")
 @ConditionalOnProperty(prefix = StarterConstants.SEATA_PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties({SeataProperties.class})
 public class SeataAutoConfiguration {
     private static final Logger LOGGER = LoggerFactory.getLogger(SeataAutoConfiguration.class);
