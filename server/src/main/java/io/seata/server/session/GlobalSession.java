@@ -116,6 +116,20 @@ public class GlobalSession implements SessionLifecycle, SessionStorable {
     }
 
     /**
+     * Has AT branch
+     *
+     * @return the boolean
+     */
+    public boolean hasATBranch() {
+        for (BranchSession branchSession : branchSessions) {
+            if (branchSession.getBranchType() == BranchType.AT) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Is saga type transaction
      *
      * @return is saga
