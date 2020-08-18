@@ -113,7 +113,7 @@
             <artifactId>seata-config-core</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>io.seata</groupId>
             <artifactId>seata-config-custom</artifactId>
             <version>${project.version}</version>
@@ -122,13 +122,13 @@
             <groupId>io.seata</groupId>
             <artifactId>seata-config-apollo</artifactId>
             <version>${project.version}</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>io.seata</groupId>
             <artifactId>seata-config-nacos</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>io.seata</groupId>
             <artifactId>seata-config-zk</artifactId>
             <version>${project.version}</version>
@@ -147,7 +147,7 @@
             <groupId>io.seata</groupId>
             <artifactId>seata-config-spring-cloud</artifactId>
             <version>${project.version}</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>io.seata</groupId>
             <artifactId>seata-core</artifactId>
@@ -158,7 +158,7 @@
             <artifactId>seata-discovery-core</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>io.seata</groupId>
             <artifactId>seata-discovery-custom</artifactId>
             <version>${project.version}</version>
@@ -167,7 +167,7 @@
             <groupId>io.seata</groupId>
             <artifactId>seata-discovery-consul</artifactId>
             <version>${project.version}</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>io.seata</groupId>
             <artifactId>seata-discovery-eureka</artifactId>
@@ -178,7 +178,7 @@
             <artifactId>seata-discovery-nacos</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>io.seata</groupId>
             <artifactId>seata-discovery-redis</artifactId>
             <version>${project.version}</version>
@@ -202,13 +202,13 @@
             <groupId>io.seata</groupId>
             <artifactId>seata-dubbo</artifactId>
             <version>${project.version}</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>io.seata</groupId>
             <artifactId>seata-http</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>io.seata</groupId>
             <artifactId>seata-dubbo-alibaba</artifactId>
             <version>${project.version}</version>
@@ -222,7 +222,7 @@
             <groupId>io.seata</groupId>
             <artifactId>seata-motan</artifactId>
             <version>${project.version}</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>io.seata</groupId>
             <artifactId>seata-rm</artifactId>
@@ -263,17 +263,17 @@
             <artifactId>seata-serializer-seata</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>io.seata</groupId>
             <artifactId>seata-serializer-protobuf</artifactId>
             <version>${project.version}</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>io.seata</groupId>
             <artifactId>seata-grpc</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>io.seata</groupId>
             <artifactId>seata-serializer-kryo</artifactId>
             <version>${project.version}</version>
@@ -287,13 +287,13 @@
             <groupId>io.seata</groupId>
             <artifactId>seata-serializer-hessian</artifactId>
             <version>${project.version}</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>io.seata</groupId>
             <artifactId>seata-compressor-gzip</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>io.seata</groupId>
             <artifactId>seata-compressor-7z</artifactId>
             <version>${project.version}</version>
@@ -312,7 +312,7 @@
             <groupId>io.seata</groupId>
             <artifactId>seata-compressor-lz4</artifactId>
             <version>${project.version}</version>
-        </dependency>
+        </dependency>-->
 
         <!-- saga -->
         <dependency>
@@ -367,6 +367,8 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
         </dependency>
+
+
         <!-- the 3rd part -->
         <dependency>
             <groupId>io.netty</groupId>
@@ -379,6 +381,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.typesafe</groupId>
@@ -408,6 +411,7 @@
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.dubbo</groupId>
@@ -679,10 +683,10 @@
                                     <!--<include>io.seata:seata-discovery-redis</include>
                                     <include>io.seata:seata-discovery-sofa</include>
                                     <include>io.seata:seata-discovery-zk</include>
-                                    <include>io.seata:seata-discovery-etcd3</include>-->
-                                    <!--<include>io.seata:seata-dubbo</include>
-                                    <include>io.seata:seata-dubbo-alibaba</include>-->
-                                    <include>io.seata:seata-motan</include>
+                                    <include>io.seata:seata-discovery-etcd3</include>
+                                    <include>io.seata:seata-dubbo</include>
+                                    <include>io.seata:seata-dubbo-alibaba</include>
+                                    <include>io.seata:seata-motan</include>-->
                                     <include>io.seata:seata-grpc</include>
                                     <include>io.seata:seata-http</include>
                                     <include>io.seata:seata-rm</include>
