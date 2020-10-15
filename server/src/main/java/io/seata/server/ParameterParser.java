@@ -81,7 +81,7 @@ public class ParameterParser {
             if (this.serverNode == null) {
                 this.serverNode = IdWorker.initWorkerId();
             }
-            if (this.host == null && StringUtils.isNotBlank(System.getProperty("seata.host"))) {
+            if (StringUtils.isBlank(this.host) && StringUtils.isNotBlank(System.getProperty("seata.host"))) {
                 this.host = System.getProperty("seata.host");
             }
             if (this.port == SERVER_DEFAULT_PORT && StringUtils.isNotBlank(System.getProperty("seata.port"))) {
