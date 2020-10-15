@@ -72,7 +72,7 @@ public class SeataAutoConfiguration {
     /**
      * The data source configuration.
      */
-    @Configuration
+    @Configuration(proxyBeanMethods = false)
     @ConditionalOnProperty(prefix = StarterConstants.SEATA_PREFIX, name = {"enableAutoDataSourceProxy", "enable-auto-data-source-proxy"}, havingValue = "true", matchIfMissing = true)
     static class SeataDataSourceConfiguration {
 
