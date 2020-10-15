@@ -19,6 +19,7 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 import io.seata.common.util.IdWorker;
+import io.seata.common.util.NumberUtils;
 import io.seata.common.util.StringUtils;
 import io.seata.config.ConfigurationFactory;
 import io.seata.core.constants.ConfigurationKeys;
@@ -79,6 +80,12 @@ public class ParameterParser {
             }
             if (this.serverNode == null) {
                 this.serverNode = IdWorker.initWorkerId();
+            }
+            if (this.host == null && StringUtils.isNotBlank(System.getProperty("seata.host"))) {
+                this.host = System.getProperty("seata.host");
+            }
+            if (this.port == SERVER_DEFAULT_PORT && StringUtils.isNotBlank(System.getProperty("seata.port"))) {
+                this.port = NumberUtils.toInt(System.getProperty("seata.port"), SERVER_DEFAULT_PORT);
             }
             if (StringUtils.isNotBlank(seataEnv)) {
                 System.setProperty(ENV_PROPERTY_KEY, seataEnv);
