@@ -16,7 +16,6 @@
 package io.seata.rm.datasource.util;
 
 import com.alibaba.druid.util.JdbcUtils;
-import com.alibaba.druid.util.MySqlUtils;
 import com.alibaba.druid.util.PGUtils;
 import io.seata.rm.BaseDataSourceResource;
 import org.slf4j.Logger;
