@@ -26,6 +26,7 @@ import io.seata.rm.DefaultResourceManager;
 import io.seata.rm.tcc.api.BusinessActionContext;
 import io.seata.rm.tcc.api.BusinessActionContextParameter;
 import io.seata.rm.tcc.api.TwoPhaseBusinessAction;
+import io.seata.rm.transaction.RMTransactionHookManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -118,6 +119,7 @@ public class ActionInterceptorHandler {
             CommitType commitType = businessAction.commitType().getCommitType();
             Long branchId = DefaultResourceManager.get().branchRegister(BranchType.TCC,
                 commitType, actionName, null, xid, applicationContextStr, null);
+            RMTransactionHookManager.setLocalBranchId(branchId);
             return String.valueOf(branchId);
         } catch (Throwable t) {
             String msg = String.format("TCC branch Register error, xid: %s", xid);
