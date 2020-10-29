@@ -17,10 +17,12 @@ package io.seata.spring.boot.autoconfigure;
 
 import java.util.HashMap;
 
+import io.seata.saga.engine.StateMachineConfig;
 import io.seata.spring.boot.autoconfigure.properties.SeataProperties;
 import io.seata.spring.boot.autoconfigure.properties.client.LockProperties;
 import io.seata.spring.boot.autoconfigure.properties.client.LogProperties;
 import io.seata.spring.boot.autoconfigure.properties.client.RmProperties;
+import io.seata.spring.boot.autoconfigure.properties.client.SagaAsyncThreadPoolProperties;
 import io.seata.spring.boot.autoconfigure.properties.client.ServiceProperties;
 import io.seata.spring.boot.autoconfigure.properties.client.ShutdownProperties;
 import io.seata.spring.boot.autoconfigure.properties.client.ThreadFactoryProperties;
@@ -58,11 +60,14 @@ public interface StarterConstants {
     String SHUTDOWN_PREFIX = TRANSPORT_PREFIX + ".shutdown";
     String SERVICE_PREFIX = SEATA_PREFIX + ".service";
     String CLIENT_PREFIX = SEATA_PREFIX + ".client";
+    String SAGA_PREFIX = SEATA_PREFIX + ".saga";
     String CLIENT_RM_PREFIX = CLIENT_PREFIX + ".rm";
     String CLIENT_TM_PREFIX = CLIENT_PREFIX + ".tm";
     String LOCK_PREFIX = CLIENT_RM_PREFIX + ".lock";
     String UNDO_PREFIX = CLIENT_PREFIX + ".undo";
     String LOG_PREFIX = CLIENT_PREFIX + ".log";
+    String SAGA_STATE_MACHINE_PREFIX = SAGA_PREFIX + ".state-machine";
+    String SAGA_ASYNC_THREAD_POOL_PREFIX = SAGA_STATE_MACHINE_PREFIX + ".async-thread-pool";
 
     String REGISTRY_PREFIX = SEATA_PREFIX + ".registry";
     String REGISTRY_NACOS_PREFIX = REGISTRY_PREFIX + ".nacos";
@@ -101,6 +106,8 @@ public interface StarterConstants {
             put(CONFIG_PREFIX, ConfigProperties.class);
             put(CONFIG_FILE_PREFIX, ConfigFileProperties.class);
             put(REGISTRY_PREFIX, RegistryProperties.class);
+            put(SAGA_PREFIX, StateMachineConfig.class);
+            put(SAGA_ASYNC_THREAD_POOL_PREFIX, SagaAsyncThreadPoolProperties.class);
 
             put(CONFIG_NACOS_PREFIX, ConfigNacosProperties.class);
             put(CONFIG_CONSUL_PREFIX, ConfigConsulProperties.class);

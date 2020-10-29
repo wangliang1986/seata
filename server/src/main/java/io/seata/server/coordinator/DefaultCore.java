@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import io.seata.core.model.CommitType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,9 +93,9 @@ public class DefaultCore implements Core {
     }
 
     @Override
-    public Long branchRegister(BranchType branchType, String resourceId, String clientId, String xid,
+    public Long branchRegister(BranchType branchType, CommitType commitType, String resourceId, String clientId, String xid,
                                String applicationData, String lockKeys) throws TransactionException {
-        return getCore(branchType).branchRegister(branchType, resourceId, clientId, xid,
+        return getCore(branchType).branchRegister(branchType, commitType, resourceId, clientId, xid,
             applicationData, lockKeys);
     }
 
@@ -189,11 +190,13 @@ public class DefaultCore implements Core {
                     continue;
                 }
 
-                BranchStatus currentStatus = branchSession.getStatus();
-                if (currentStatus == BranchStatus.PhaseOne_Failed) {
+                // if PhaseOne_Failed or NoCommit, remove the branch directly.
+                if (branchSession.getStatus() == BranchStatus.PhaseOne_Failed
+                        || branchSession.getCommitType() == CommitType.NoCommit) {
                     globalSession.removeBranch(branchSession);
                     continue;
                 }
+
                 try {
                     BranchStatus branchStatus = getCore(branchSession.getBranchType()).branchCommit(globalSession, branchSession);
 

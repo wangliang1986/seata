@@ -226,7 +226,6 @@ public class DataBaseTransactionStoreManager extends AbstractTransactionStoreMan
         return globalSession;
     }
 
-
     /**
      * Sets log store.
      *

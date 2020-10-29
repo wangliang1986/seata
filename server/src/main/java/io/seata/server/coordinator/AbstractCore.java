@@ -24,6 +24,7 @@ import io.seata.core.exception.TransactionException;
 import io.seata.core.exception.TransactionExceptionCode;
 import io.seata.core.model.BranchStatus;
 import io.seata.core.model.BranchType;
+import io.seata.core.model.CommitType;
 import io.seata.core.model.GlobalStatus;
 import io.seata.core.protocol.transaction.BranchCommitRequest;
 import io.seata.core.protocol.transaction.BranchCommitResponse;
@@ -66,13 +67,13 @@ public abstract class AbstractCore implements Core {
     public abstract BranchType getHandleBranchType();
 
     @Override
-    public Long branchRegister(BranchType branchType, String resourceId, String clientId, String xid,
+    public Long branchRegister(BranchType branchType, CommitType commitType, String resourceId, String clientId, String xid,
                                String applicationData, String lockKeys) throws TransactionException {
         GlobalSession globalSession = assertGlobalSessionNotNull(xid, false);
         return SessionHolder.lockAndExecute(globalSession, () -> {
             globalSessionStatusCheck(globalSession);
             globalSession.addSessionLifecycleListener(SessionHolder.getRootSessionManager());
-            BranchSession branchSession = SessionHelper.newBranchByGlobal(globalSession, branchType, resourceId,
+            BranchSession branchSession = SessionHelper.newBranchByGlobal(globalSession, branchType, commitType, resourceId,
                     applicationData, lockKeys, clientId);
             branchSessionLock(globalSession, branchSession);
             try {

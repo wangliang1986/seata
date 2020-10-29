@@ -44,6 +44,13 @@ public @interface TwoPhaseBusinessAction {
     String name();
 
     /**
+     * commit type
+     *
+     * @return the commit type
+     */
+    TCCCommitType commitType() default TCCCommitType.SyncCommit;
+
+    /**
      * commit methed name
      *
      * @return the string
