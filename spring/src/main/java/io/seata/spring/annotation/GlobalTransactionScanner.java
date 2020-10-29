@@ -16,22 +16,25 @@
 package io.seata.spring.annotation;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-
 import io.seata.common.util.CollectionUtils;
 import io.seata.common.util.StringUtils;
+import io.seata.config.ConfigurationCache;
 import io.seata.config.ConfigurationChangeEvent;
 import io.seata.config.ConfigurationChangeListener;
 import io.seata.config.ConfigurationFactory;
-import io.seata.config.ConfigurationCache;
 import io.seata.core.constants.ConfigurationKeys;
-import io.seata.core.rpc.netty.RmNettyRemotingClient;
 import io.seata.core.rpc.ShutdownHook;
+import io.seata.core.rpc.netty.RmNettyRemotingClient;
 import io.seata.core.rpc.netty.TmNettyRemotingClient;
 import io.seata.rm.RMClient;
+import io.seata.spring.annotation.scannercheckers.PackageScannerChecker;
 import io.seata.spring.tcc.TccActionInterceptor;
 import io.seata.spring.util.OrderUtil;
 import io.seata.spring.util.SpringProxyUtils;
@@ -41,6 +44,7 @@ import io.seata.tm.api.FailureHandler;
 import org.aopalliance.aop.Advice;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
+import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.Advisor;
@@ -50,12 +54,13 @@ import org.springframework.aop.framework.autoproxy.AbstractAutoProxyCreator;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.Ordered;
-
 
 import static io.seata.common.DefaultValues.DEFAULT_DISABLE_GLOBAL_TRANSACTION;
 
@@ -78,6 +83,10 @@ public class GlobalTransactionScanner extends AbstractAutoProxyCreator
     private static final int DEFAULT_MODE = AT_MODE + MT_MODE;
 
     private static final Set<String> PROXYED_SET = new HashSet<>();
+    private static final Set<String> EXCLUDE_BEAN_NAME_SET = new HashSet<>();
+    private static final Set<ScannerChecker> SCANNER_CHECKER_SET = new LinkedHashSet<>();
+
+    private static ConfigurableListableBeanFactory beanFactory;
 
     private MethodInterceptor interceptor;
     private MethodInterceptor globalTransactionalInterceptor;
@@ -232,7 +241,7 @@ public class GlobalTransactionScanner extends AbstractAutoProxyCreator
      * GlobalLock:
      * @see io.seata.spring.annotation.GlobalLock // GlobalLock annotation
      * Corresponding interceptor:
-     * @see io.seata.spring.annotation.GlobalTransactionalInterceptor#handleGlobalLock(MethodInvocation) // GlobalLock handler
+     * @see io.seata.spring.annotation.GlobalTransactionalInterceptor#handleGlobalLock(MethodInvocation, GlobalLock) // GlobalLock handler
      *
      * TCC mode:
      * @see io.seata.rm.tcc.api.LocalTCC // TCC annotation on interface
@@ -243,6 +252,11 @@ public class GlobalTransactionScanner extends AbstractAutoProxyCreator
      */
     @Override
     protected Object wrapIfNecessary(Object bean, String beanName, Object cacheKey) {
+        // do checkers
+        if (!doCheckers(bean, beanName)) {
+            return bean;
+        }
+
         try {
             synchronized (PROXYED_SET) {
                 if (PROXYED_SET.contains(beanName)) {
@@ -294,6 +308,29 @@ public class GlobalTransactionScanner extends AbstractAutoProxyCreator
         } catch (Exception exx) {
             throw new RuntimeException(exx);
         }
+    }
+
+    private boolean doCheckers(Object bean, String beanName) {
+        if (PROXYED_SET.contains(beanName) || EXCLUDE_BEAN_NAME_SET.contains(beanName)
+                || FactoryBean.class.isAssignableFrom(bean.getClass())) {
+            return false;
+        }
+
+        if (!SCANNER_CHECKER_SET.isEmpty()) {
+            for (ScannerChecker checker : SCANNER_CHECKER_SET) {
+                try {
+                    if (!checker.check(bean, beanName, beanFactory)) {
+                        // failed check, do not scan this bean
+                        return false;
+                    }
+                } catch (Throwable e) {
+                    LOGGER.error("Do check failed: beanName={}, checker={}",
+                            beanName, checker.getClass().getSimpleName(), e);
+                }
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -433,6 +470,33 @@ public class GlobalTransactionScanner extends AbstractAutoProxyCreator
             if (!disableGlobalTransaction && initialized.compareAndSet(false, true)) {
                 initClient();
             }
+        }
+    }
+
+    public static void setBeanFactory(ConfigurableListableBeanFactory beanFactory) {
+        GlobalTransactionScanner.beanFactory = beanFactory;
+    }
+
+    public static void addScannablePackages(String... packages) {
+        PackageScannerChecker.addScannablePackages(packages);
+    }
+
+    public static void addScannerCheckers(Collection<ScannerChecker> scannerCheckers) {
+        if (CollectionUtils.isNotEmpty(scannerCheckers)) {
+            scannerCheckers.remove(null);
+            SCANNER_CHECKER_SET.addAll(scannerCheckers);
+        }
+    }
+
+    public static void addScannerCheckers(ScannerChecker... scannerCheckers) {
+        if (ArrayUtils.isNotEmpty(scannerCheckers)) {
+            addScannerCheckers(Arrays.asList(scannerCheckers));
+        }
+    }
+
+    public static void addScannerExcludeBeanNames(String... beanNames) {
+        if (ArrayUtils.isNotEmpty(beanNames)) {
+            EXCLUDE_BEAN_NAME_SET.addAll(Arrays.asList(beanNames));
         }
     }
 }
