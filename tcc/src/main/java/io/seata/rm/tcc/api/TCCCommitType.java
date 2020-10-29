@@ -36,6 +36,8 @@ public enum TCCCommitType {
 
     /**
      * The no commit.
+     *
+     * @warning This value is used as a temporary scheme for annotated saga.
      */
     NoCommit,
 
