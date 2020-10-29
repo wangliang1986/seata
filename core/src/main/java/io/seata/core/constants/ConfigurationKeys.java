@@ -144,6 +144,11 @@ public interface ConfigurationKeys {
     String CLIENT_TABLE_META_CHECK_ENABLE = CLIENT_RM_PREFIX + "tableMetaCheckEnable";
 
     /**
+     * The constant TCC_ACTION_INTERCEPTOR_ORDER.
+     */
+    String TCC_ACTION_INTERCEPTOR_ORDER = CLIENT_RM_PREFIX + "tccActionInterceptorOrder";
+
+    /**
      * The constant CLIENT_TM_PREFIX.
      */
     String CLIENT_TM_PREFIX = CLIENT_PREFIX + "tm.";
@@ -508,6 +513,11 @@ public interface ConfigurationKeys {
      * The constant CLIENT_DEGRADE_CHECK_ALLOW_TIMES.
      */
     String CLIENT_DEGRADE_CHECK_ALLOW_TIMES = CLIENT_TM_PREFIX + "degradeCheckAllowTimes";
+
+    /**
+     * The constant GLOBAL_TRANSACTION_INTERCEPTOR_ORDER.
+     */
+    String TM_INTERCEPTOR_ORDER = CLIENT_TM_PREFIX + "interceptorOrder";
 
     /**
      * The constant SEATA_ACCESS_KEY.

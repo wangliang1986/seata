@@ -95,4 +95,7 @@ public interface DefaultValues {
 
     String DEFAULT_LOAD_BALANCE = "RandomLoadBalance";
     int VIRTUAL_NODES_DEFAULT = 10;
+
+    int TM_INTERCEPTOR_ORDER = Integer.MIN_VALUE + 1000;
+    int TCC_ACTION_INTERCEPTOR_ORDER = Integer.MIN_VALUE + 1000;
 }
