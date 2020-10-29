@@ -176,7 +176,6 @@ public class GlobalSession implements SessionLifecycle, SessionStorable {
         for (SessionLifecycleListener lifecycleListener : lifecycleListeners) {
             lifecycleListener.onStatusChange(this, status);
         }
-
     }
 
     @Override
@@ -210,12 +209,12 @@ public class GlobalSession implements SessionLifecycle, SessionStorable {
         for (SessionLifecycleListener lifecycleListener : lifecycleListeners) {
             lifecycleListener.onEnd(this);
         }
-
     }
 
     public void clean() throws TransactionException {
-        LockerManagerFactory.getLockManager().releaseGlobalSessionLock(this);
-
+        if (this.hasATBranch()) {
+            LockerManagerFactory.getLockManager().releaseGlobalSessionLock(this);
+        }
     }
 
     /**
@@ -226,7 +225,6 @@ public class GlobalSession implements SessionLifecycle, SessionStorable {
     public void closeAndClean() throws TransactionException {
         close();
         clean();
-
     }
 
     /**
@@ -283,7 +281,6 @@ public class GlobalSession implements SessionLifecycle, SessionStorable {
 
             return null;
         }
-
     }
 
     /**
@@ -482,7 +479,6 @@ public class GlobalSession implements SessionLifecycle, SessionStorable {
 
     @Override
     public byte[] encode() {
-
         byte[] byApplicationIdBytes = applicationId != null ? applicationId.getBytes() : null;
 
         byte[] byServiceGroupBytes = transactionServiceGroup != null ? transactionServiceGroup.getBytes() : null;
@@ -641,7 +637,6 @@ public class GlobalSession implements SessionLifecycle, SessionStorable {
         public void unlock() {
             globalSessionLock.unlock();
         }
-
     }
 
     @FunctionalInterface
