@@ -257,7 +257,7 @@ public class GlobalSession implements SessionLifecycle, SessionStorable {
     @Override
     public void removeBranch(BranchSession branchSession) throws TransactionException {
         if (!branchSession.unlock()) {
-            throw new TransactionException("Unlock branch lock failed!");
+            throw new TransactionException(String.format("unlock failed, xid: %s, branchId: %s", branchSession.getXid(), branchSession.getBranchId()));
         }
         for (SessionLifecycleListener lifecycleListener : lifecycleListeners) {
             lifecycleListener.onRemoveBranch(this, branchSession);
