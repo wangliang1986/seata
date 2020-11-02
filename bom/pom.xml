@@ -20,7 +20,7 @@
 
     <groupId>io.seata</groupId>
     <artifactId>seata-bom</artifactId>
-    <version>1.4.0-CUSTOM-SNAPSHOT</version>
+    <version>1.5.0-CUSTOM-SNAPSHOT</version>
 
     <!--资源上传库管理-->
     <distributionManagement>
