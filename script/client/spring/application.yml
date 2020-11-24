@@ -140,4 +140,4 @@ seata:
       default-tenant-id: 000001
       charset: UTF-8
   log:
-    exceptionRate: 100
+    exception-rate: 100
