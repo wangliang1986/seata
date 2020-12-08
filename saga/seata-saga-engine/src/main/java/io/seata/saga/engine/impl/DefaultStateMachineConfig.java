@@ -71,6 +71,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.Resource;
 
+import static io.seata.common.DefaultValues.DEFAULT_SAGA_JSON_PARSER;
+
 /**
  * Default state machine configuration
  *
@@ -107,6 +109,7 @@ public class DefaultStateMachineConfig implements StateMachineConfig, Applicatio
     private String charset = "UTF-8";
     private String defaultTenantId = "000001";
     private ScriptEngineManager scriptEngineManager;
+    private String sagaJsonParser = DEFAULT_SAGA_JSON_PARSER;
 
     protected void init() throws Exception {
 
@@ -143,6 +146,7 @@ public class DefaultStateMachineConfig implements StateMachineConfig, Applicatio
             stateMachineRepository.setSeqGenerator(seqGenerator);
             stateMachineRepository.setStateLangStore(stateLangStore);
             stateMachineRepository.setDefaultTenantId(defaultTenantId);
+            stateMachineRepository.setJsonParserName(sagaJsonParser);
             this.stateMachineRepository = stateMachineRepository;
         }
         //stateMachineRepository may be overridden, so move `stateMachineRepository.registryByResources()` here.
@@ -472,5 +476,13 @@ public class DefaultStateMachineConfig implements StateMachineConfig, Applicatio
 
     public void setScriptEngineManager(ScriptEngineManager scriptEngineManager) {
         this.scriptEngineManager = scriptEngineManager;
+    }
+
+    public String getSagaJsonParser() {
+        return sagaJsonParser;
+    }
+
+    public void setSagaJsonParser(String sagaJsonParser) {
+        this.sagaJsonParser = sagaJsonParser;
     }
 }

@@ -26,6 +26,7 @@ import java.util.Map;
 
 import io.seata.common.Constants;
 import io.seata.common.exception.FrameworkErrorCode;
+import io.seata.common.exception.StoreException;
 import io.seata.common.util.CollectionUtils;
 import io.seata.core.context.RootContext;
 import io.seata.core.exception.TransactionException;
@@ -97,22 +98,29 @@ public class DbAndReportTcStateLogStore extends AbstractStore implements StateLo
                 beginTransaction(machineInstance, context);
             }
 
-
-            if (StringUtils.isEmpty(machineInstance.getId()) && seqGenerator != null) {
-                machineInstance.setId(seqGenerator.generate(DomainConstants.SEQ_ENTITY_STATE_MACHINE_INST));
-            }
-
-            // bind SAGA branch type
-            RootContext.bindBranchType(BranchType.SAGA);
-
-            // save to db
             try {
+                if (StringUtils.isEmpty(machineInstance.getId()) && seqGenerator != null) {
+                    machineInstance.setId(seqGenerator.generate(DomainConstants.SEQ_ENTITY_STATE_MACHINE_INST));
+                }
+
+                // bind SAGA branch type
+                RootContext.bindBranchType(BranchType.SAGA);
+
+                // save to db
                 machineInstance.setSerializedStartParams(paramsSerializer.serialize(machineInstance.getStartParams()));
-                executeUpdate(stateLogStoreSqls.getRecordStateMachineStartedSql(dbType),
-                        STATE_MACHINE_INSTANCE_TO_STATEMENT_FOR_INSERT, machineInstance);
-            } catch (Exception e) {
+                int effect = executeUpdate(stateLogStoreSqls.getRecordStateMachineStartedSql(dbType),
+                    STATE_MACHINE_INSTANCE_TO_STATEMENT_FOR_INSERT, machineInstance);
+                if (effect < 1) {
+                    throw new StoreException("StateMachineInstance record start error, Xid: " + machineInstance.getId(),
+                        FrameworkErrorCode.OperationDenied);
+                }
+            } catch (StoreException e) {
+                LOGGER.error("Record statemachine start error: {}, StateMachine: {}, XID: {}, Reason: {}",
+                    e.getErrcode(), machineInstance.getStateMachine().getName(), machineInstance.getId(), e.getMessage(), e);
+                // clear
                 RootContext.unbind();
                 RootContext.unbindBranchType();
+                sagaTransactionalTemplate.cleanUp();
                 throw e;
             }
         }
