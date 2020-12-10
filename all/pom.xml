@@ -208,12 +208,12 @@
             <artifactId>seata-http</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!--<dependency>
+        <dependency>
             <groupId>io.seata</groupId>
             <artifactId>seata-dubbo-alibaba</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>io.seata</groupId>
             <artifactId>seata-sofa-rpc</artifactId>
             <version>${project.version}</version>
@@ -311,6 +311,11 @@
         <dependency>
             <groupId>io.seata</groupId>
             <artifactId>seata-compressor-lz4</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.seata</groupId>
+            <artifactId>seata-compressor-deflater</artifactId>
             <version>${project.version}</version>
         </dependency>-->
 
@@ -689,9 +694,9 @@
                                     <include>io.seata:seata-discovery-sofa</include>
                                     <include>io.seata:seata-discovery-zk</include>
                                     <include>io.seata:seata-discovery-etcd3</include>
-                                    <include>io.seata:seata-dubbo</include>
+                                    <include>io.seata:seata-dubbo</include>-->
                                     <include>io.seata:seata-dubbo-alibaba</include>
-                                    <include>io.seata:seata-motan</include>-->
+                                    <!--<include>io.seata:seata-motan</include>-->
                                     <include>io.seata:seata-grpc</include>
                                     <include>io.seata:seata-http</include>
                                     <include>io.seata:seata-rm</include>
@@ -714,11 +719,13 @@
                                     <include>io.seata:seata-saga-rm</include>
                                     <include>io.seata:seata-saga-tm</include>
                                     <include>io.seata:seata-saga-engine-store</include>
+                                    <!--compressor-->
                                     <include>io.seata:seata-compressor-gzip</include>
                                     <!--<include>io.seata:seata-compressor-7z</include>
                                     <include>io.seata:seata-compressor-bzip2</include>
                                     <include>io.seata:seata-compressor-zip</include>
-                                    <include>io.seata:seata-compressor-lz4</include>-->
+                                    <include>io.seata:seata-compressor-lz4</include>
+                                    <include>io.seata:seata-compressor-deflater</include>-->
                                 </includes>
                             </artifactSet>
                             <transformers>
