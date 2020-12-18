@@ -96,6 +96,22 @@ public interface DefaultValues {
     String DEFAULT_LOAD_BALANCE = "RandomLoadBalance";
     int VIRTUAL_NODES_DEFAULT = 10;
 
+    /**
+     * the constant DEFAULT_CLIENT_UNDO_COMPRESS_ENABLE
+     */
+    boolean DEFAULT_CLIENT_UNDO_COMPRESS_ENABLE = true;
+
+    /**
+     * the constant DEFAULT_CLIENT_UNDO_COMPRESS_TYPE
+     */
+    String DEFAULT_CLIENT_UNDO_COMPRESS_TYPE = "zip";
+
+    /**
+     * the constant DEFAULT_CLIENT_UNDO_COMPRESS_THRESHOLD
+     */
+    String DEFAULT_CLIENT_UNDO_COMPRESS_THRESHOLD = "64k";
+
     int TM_INTERCEPTOR_ORDER = Integer.MIN_VALUE + 1000;
     int TCC_ACTION_INTERCEPTOR_ORDER = Integer.MIN_VALUE + 1000;
 }
+
