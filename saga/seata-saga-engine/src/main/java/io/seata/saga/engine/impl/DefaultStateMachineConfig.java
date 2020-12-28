@@ -71,6 +71,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.Resource;
 
+import javax.script.ScriptEngineManager;
+
+import static io.seata.common.DefaultValues.DEFAULT_CLIENT_SAGA_COMPENSATE_PERSIST_MODE_UPDATE;
+import static io.seata.common.DefaultValues.DEFAULT_CLIENT_SAGA_RETRY_PERSIST_MODE_UPDATE;
 import static io.seata.common.DefaultValues.DEFAULT_SAGA_JSON_PARSER;
 
 /**
@@ -110,6 +114,8 @@ public class DefaultStateMachineConfig implements StateMachineConfig, Applicatio
     private String defaultTenantId = "000001";
     private ScriptEngineManager scriptEngineManager;
     private String sagaJsonParser = DEFAULT_SAGA_JSON_PARSER;
+    private boolean sagaRetryPersistModeUpdate = DEFAULT_CLIENT_SAGA_RETRY_PERSIST_MODE_UPDATE;
+    private boolean sagaCompensatePersistModeUpdate = DEFAULT_CLIENT_SAGA_COMPENSATE_PERSIST_MODE_UPDATE;
 
     protected void init() throws Exception {
 
@@ -484,5 +490,21 @@ public class DefaultStateMachineConfig implements StateMachineConfig, Applicatio
 
     public void setSagaJsonParser(String sagaJsonParser) {
         this.sagaJsonParser = sagaJsonParser;
+    }
+
+    public boolean isSagaRetryPersistModeUpdate() {
+        return sagaRetryPersistModeUpdate;
+    }
+
+    public void setSagaRetryPersistModeUpdate(boolean sagaRetryPersistModeUpdate) {
+        this.sagaRetryPersistModeUpdate = sagaRetryPersistModeUpdate;
+    }
+
+    public boolean isSagaCompensatePersistModeUpdate() {
+        return sagaCompensatePersistModeUpdate;
+    }
+
+    public void setSagaCompensatePersistModeUpdate(boolean sagaCompensatePersistModeUpdate) {
+        this.sagaCompensatePersistModeUpdate = sagaCompensatePersistModeUpdate;
     }
 }

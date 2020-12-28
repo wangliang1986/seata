@@ -16,6 +16,8 @@ seata:
       report-success-enable: false
       saga-branch-register-enable: false
       saga-json-parser: fastjson
+      saga-retry-persist-mode-update: false
+      saga-compensate-persist-mode-update: false
       tcc-action-interceptor-order: -2147482648 #Ordered.HIGHEST_PRECEDENCE + 1000
       lock:
         retry-interval: 10
