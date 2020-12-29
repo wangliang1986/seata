@@ -32,7 +32,7 @@ public class MySqlUtils {
     static boolean        utilClassError = false;
     static boolean        utilClass_isJdbc4 = false;
 
-    static Class<?>       class_5_connection= null;
+    static Class<?>       class_5_connection = null;
     static Method         method_5_getPinGlobalTxToPhysicalConnection = null;
     static Class<?>       class_5_suspendableXAConnection = null;
     static Constructor<?> constructor_5_suspendableXAConnection = null;
@@ -41,7 +41,7 @@ public class MySqlUtils {
     static Class<?>       class_5_MysqlXAConnection = null;
     static Constructor<?> constructor_5_MysqlXAConnection = null;
 
-    volatile static Class<?>       class_6_connection= null;
+    volatile static Class<?>       class_6_connection = null;
     volatile static Method         method_6_getPropertySet = null;
     volatile static Method         method_6_getBooleanProperty = null;
     volatile static Method         method_6_getValue = null;
