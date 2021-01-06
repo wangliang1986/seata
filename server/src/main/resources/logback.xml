@@ -30,8 +30,11 @@
     <!-- file-appender -->
     <include resource="logback/file-appender.xml"/>
 
-    <!-- logstash-appender -->
-    <include resource="logback/logstash-appender.xml"/>
+    <!-- logstash-appender: off by default -->
+    <!--<include resource="logback/logstash-appender.xml"/>-->
+
+    <!-- kafka-appender: off by default -->
+    <!--<include resource="logback/kafka-appender.xml"/>-->
 
     <root level="INFO">
         <!-- console-appender -->
@@ -42,7 +45,10 @@
         <appender-ref ref="FILE_WARN"/>
         <appender-ref ref="FILE_ERROR"/>
 
-        <!-- logstash-appender -->
-        <appender-ref ref="LOGSTASH"/>
+        <!-- logstash-appender: off by default -->
+        <!--<appender-ref ref="LOGSTASH"/>-->
+
+        <!-- kafka-appender: off by default -->
+        <!--<appender-ref ref="KAFKA"/>-->
     </root>
 </configuration>
