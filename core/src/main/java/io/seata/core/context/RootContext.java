@@ -24,6 +24,7 @@ import io.seata.common.util.StringUtils;
 import io.seata.core.model.BranchType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import static io.seata.core.model.BranchType.AT;
 import static io.seata.core.model.BranchType.XA;
@@ -44,6 +45,16 @@ public class RootContext {
      * The constant KEY_XID.
      */
     public static final String KEY_XID = "TX_XID";
+
+    /**
+     * The constant MDC_KEY_XID for logback
+     */
+    public static final String MDC_KEY_XID = "X-TX-XID";
+
+    /**
+     * The constant MDC_KEY_BRANCH_ID for logback
+     */
+    public static final String MDC_KEY_BRANCH_ID = "X-TX-BRANCH-ID";
 
     /**
      * The constant KEY_BRANCH_TYPE
@@ -90,6 +101,8 @@ public class RootContext {
     public static void bind(@Nonnull String xid) {
         if (StringUtils.isBlank(xid)) {
             xid = null;
+        } else {
+            MDC.put(MDC_KEY_XID, xid);
         }
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("bind {}", xid);
@@ -116,6 +129,7 @@ public class RootContext {
      */
     @Nullable
     public static String unbind() {
+        MDC.remove(MDC_KEY_XID);
         String xid = (String) CONTEXT_HOLDER.remove(KEY_XID);
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("unbind {} ", xid);
