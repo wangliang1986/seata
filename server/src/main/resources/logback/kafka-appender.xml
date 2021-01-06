@@ -15,6 +15,8 @@
                 "PORT": ${PORT:-0},
                 "thread_name": "%t",
                 "logger_name": "%logger",
+                "X-TX-XID": "%X{X-TX-XID:-}",
+                "X-TX-BRANCH-ID": "%X{X-TX-BRANCH-ID:-}",
                 "message": "%m",
                 "stack_trace": "%wex"
                 }
