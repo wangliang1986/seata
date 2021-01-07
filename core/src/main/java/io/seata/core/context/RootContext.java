@@ -100,14 +100,17 @@ public class RootContext {
      */
     public static void bind(@Nonnull String xid) {
         if (StringUtils.isBlank(xid)) {
-            xid = null;
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("xid is blank, switch to unbind operation!");
+            }
+            unbind();
         } else {
             MDC.put(MDC_KEY_XID, xid);
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("bind {}", xid);
+            }
+            CONTEXT_HOLDER.put(KEY_XID, xid);
         }
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("bind {}", xid);
-        }
-        CONTEXT_HOLDER.put(KEY_XID, xid);
     }
 
     /**
@@ -129,10 +132,12 @@ public class RootContext {
      */
     @Nullable
     public static String unbind() {
-        MDC.remove(MDC_KEY_XID);
         String xid = (String) CONTEXT_HOLDER.remove(KEY_XID);
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("unbind {} ", xid);
+        if (xid != null) {
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("unbind {} ", xid);
+            }
+            MDC.remove(MDC_KEY_XID);
         }
         return xid;
     }
