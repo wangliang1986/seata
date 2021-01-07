@@ -21,6 +21,7 @@ import io.seata.common.util.CollectionUtils;
 import io.seata.common.util.DurationUtil;
 import io.seata.config.ConfigurationFactory;
 import io.seata.core.constants.ConfigurationKeys;
+import io.seata.core.context.RootContext;
 import io.seata.core.event.EventBus;
 import io.seata.core.event.GlobalTransactionEvent;
 import io.seata.core.exception.TransactionException;
@@ -47,15 +48,19 @@ import io.seata.core.protocol.transaction.GlobalStatusRequest;
 import io.seata.core.protocol.transaction.GlobalStatusResponse;
 import io.seata.core.protocol.transaction.UndoLogDeleteRequest;
 import io.seata.core.rpc.netty.ChannelManager;
+import io.seata.core.rpc.Disposable;
 import io.seata.core.rpc.RemotingServer;
 import io.seata.core.rpc.RpcContext;
+import io.seata.core.rpc.TransactionMessageHandler;
 import io.seata.core.rpc.netty.NettyRemotingServer;
 import io.seata.server.AbstractTCInboundHandler;
 import io.seata.server.event.EventBusManager;
 import io.seata.server.session.GlobalSession;
+import io.seata.server.session.SessionHelper;
 import io.seata.server.session.SessionHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import java.time.Duration;
 import java.util.Collection;
@@ -66,7 +71,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * The type Default coordinator.
  */
-public class DefaultCoordinator extends AbstractTCInboundHandler implements Coordinator {
+public class DefaultCoordinator extends AbstractTCInboundHandler implements TransactionMessageHandler, Disposable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultCoordinator.class);
 
@@ -162,30 +167,35 @@ public class DefaultCoordinator extends AbstractTCInboundHandler implements Coor
     @Override
     protected void doGlobalCommit(GlobalCommitRequest request, GlobalCommitResponse response, RpcContext rpcContext)
         throws TransactionException {
+        MDC.put(RootContext.MDC_KEY_XID, request.getXid());
         response.setGlobalStatus(core.commit(request.getXid()));
     }
 
     @Override
     protected void doGlobalRollback(GlobalRollbackRequest request, GlobalRollbackResponse response,
                                     RpcContext rpcContext) throws TransactionException {
+        MDC.put(RootContext.MDC_KEY_XID, request.getXid());
         response.setGlobalStatus(core.rollback(request.getXid()));
     }
 
     @Override
     protected void doGlobalStatus(GlobalStatusRequest request, GlobalStatusResponse response, RpcContext rpcContext)
         throws TransactionException {
+        MDC.put(RootContext.MDC_KEY_XID, request.getXid());
         response.setGlobalStatus(core.getStatus(request.getXid()));
     }
 
     @Override
     protected void doGlobalReport(GlobalReportRequest request, GlobalReportResponse response, RpcContext rpcContext)
         throws TransactionException {
+        MDC.put(RootContext.MDC_KEY_XID, request.getXid());
         response.setGlobalStatus(core.globalReport(request.getXid(), request.getGlobalStatus()));
     }
 
     @Override
     protected void doBranchRegister(BranchRegisterRequest request, BranchRegisterResponse response,
                                     RpcContext rpcContext) throws TransactionException {
+        MDC.put(RootContext.MDC_KEY_XID, request.getXid());
         response.setBranchId(
             core.branchRegister(request.getBranchType(), request.getCommitType(), request.getResourceId(), rpcContext.getClientId(),
                 request.getXid(), request.getApplicationData(), request.getLockKey()));
@@ -194,6 +204,8 @@ public class DefaultCoordinator extends AbstractTCInboundHandler implements Coor
     @Override
     protected void doBranchReport(BranchReportRequest request, BranchReportResponse response, RpcContext rpcContext)
         throws TransactionException {
+        MDC.put(RootContext.MDC_KEY_XID, request.getXid());
+        MDC.put(RootContext.MDC_KEY_BRANCH_ID, String.valueOf(request.getBranchId()));
         core.branchReport(request.getBranchType(), request.getXid(), request.getBranchId(), request.getStatus(),
             request.getApplicationData());
     }
@@ -201,6 +213,7 @@ public class DefaultCoordinator extends AbstractTCInboundHandler implements Coor
     @Override
     protected void doLockCheck(GlobalLockQueryRequest request, GlobalLockQueryResponse response, RpcContext rpcContext)
         throws TransactionException {
+        MDC.put(RootContext.MDC_KEY_XID, request.getXid());
         response.setLockable(
             core.lockQuery(request.getBranchType(), request.getResourceId(), request.getXid(), request.getLockKey()));
     }
@@ -218,7 +231,7 @@ public class DefaultCoordinator extends AbstractTCInboundHandler implements Coor
         if (allSessions.size() > 0 && LOGGER.isDebugEnabled()) {
             LOGGER.debug("Global transaction timeout check begin, size: {}", allSessions.size());
         }
-        for (GlobalSession globalSession : allSessions) {
+        SessionHelper.foreach(allSessions, globalSession -> {
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug(
                     globalSession.getXid() + " " + globalSession.getStatus() + " " + globalSession.getBeginTime() + " "
@@ -241,14 +254,14 @@ public class DefaultCoordinator extends AbstractTCInboundHandler implements Coor
                 return true;
             });
             if (!shouldTimeout) {
-                continue;
+                // continue
+                return;
             }
             LOGGER.info("Global transaction[{}] is timeout and will be rollback.", globalSession.getXid());
 
             globalSession.addSessionLifecycleListener(SessionHolder.getRetryRollbackingSessionManager());
             SessionHolder.getRetryRollbackingSessionManager().addGlobalSession(globalSession);
-
-        }
+        });
         if (allSessions.size() > 0 && LOGGER.isDebugEnabled()) {
             LOGGER.debug("Global transaction timeout check end. ");
         }
@@ -264,11 +277,12 @@ public class DefaultCoordinator extends AbstractTCInboundHandler implements Coor
             return;
         }
         long now = System.currentTimeMillis();
-        for (GlobalSession rollbackingSession : rollbackingSessions) {
+        SessionHelper.foreach(rollbackingSessions, rollbackingSession -> {
             try {
                 // prevent repeated rollback
                 if (rollbackingSession.getStatus().equals(GlobalStatus.Rollbacking) && !rollbackingSession.isRollbackingDead()) {
-                    continue;
+                    // continue
+                    return;
                 }
                 if (isRetryTimeout(now, MAX_ROLLBACK_RETRY_TIMEOUT.toMillis(), rollbackingSession.getBeginTime())) {
                     if (ROLLBACK_RETRY_TIMEOUT_UNLOCK_ENABLE) {
@@ -279,14 +293,15 @@ public class DefaultCoordinator extends AbstractTCInboundHandler implements Coor
                      */
                     SessionHolder.getRetryRollbackingSessionManager().removeGlobalSession(rollbackingSession);
                     LOGGER.info("Global transaction rollback retry timeout and has removed [{}]", rollbackingSession.getXid());
-                    continue;
+                    // continue
+                    return;
                 }
                 rollbackingSession.addSessionLifecycleListener(SessionHolder.getRootSessionManager());
                 core.doGlobalRollback(rollbackingSession, true);
             } catch (TransactionException ex) {
                 LOGGER.info("Failed to retry rollbacking [{}] {} {}", rollbackingSession.getXid(), ex.getCode(), ex.getMessage());
             }
-        }
+        });
     }
 
     /**
@@ -298,7 +313,7 @@ public class DefaultCoordinator extends AbstractTCInboundHandler implements Coor
             return;
         }
         long now = System.currentTimeMillis();
-        for (GlobalSession committingSession : committingSessions) {
+        SessionHelper.foreach(committingSessions, committingSession -> {
             try {
                 if (isRetryTimeout(now, MAX_COMMIT_RETRY_TIMEOUT.toMillis(), committingSession.getBeginTime())) {
                     /**
@@ -306,14 +321,15 @@ public class DefaultCoordinator extends AbstractTCInboundHandler implements Coor
                      */
                     SessionHolder.getRetryCommittingSessionManager().removeGlobalSession(committingSession);
                     LOGGER.error("Global transaction commit retry timeout and has removed [{}]", committingSession.getXid());
-                    continue;
+                    // continue
+                    return;
                 }
                 committingSession.addSessionLifecycleListener(SessionHolder.getRootSessionManager());
                 core.doGlobalCommit(committingSession, true);
             } catch (TransactionException ex) {
                 LOGGER.info("Failed to retry committing [{}] {} {}", committingSession.getXid(), ex.getCode(), ex.getMessage());
             }
-        }
+        });
     }
 
     private boolean isRetryTimeout(long now, long timeout, long beginTime) {
@@ -329,18 +345,19 @@ public class DefaultCoordinator extends AbstractTCInboundHandler implements Coor
         if (CollectionUtils.isEmpty(asyncCommittingSessions)) {
             return;
         }
-        for (GlobalSession asyncCommittingSession : asyncCommittingSessions) {
+        SessionHelper.foreach(asyncCommittingSessions, asyncCommittingSession -> {
             try {
                 // Instruction reordering in DefaultCore#asyncCommit may cause this situation
                 if (GlobalStatus.AsyncCommitting != asyncCommittingSession.getStatus()) {
-                    continue;
+                    // continue
+                    return;
                 }
                 asyncCommittingSession.addSessionLifecycleListener(SessionHolder.getRootSessionManager());
                 core.doGlobalCommit(asyncCommittingSession, true);
             } catch (TransactionException ex) {
                 LOGGER.error("Failed to async committing [{}] {} {}", asyncCommittingSession.getXid(), ex.getCode(), ex.getMessage(), ex);
             }
-        }
+        });
     }
 
     /**
@@ -372,7 +389,6 @@ public class DefaultCoordinator extends AbstractTCInboundHandler implements Coor
     /**
      * Init.
      */
-    @Override
     public void init() {
         retryRollbacking.scheduleAtFixedRate(() -> {
             try {
