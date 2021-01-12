@@ -30,6 +30,7 @@ import io.seata.core.protocol.transaction.GlobalLockQueryRequest;
 import io.seata.core.protocol.transaction.GlobalReportRequest;
 import io.seata.core.protocol.transaction.GlobalRollbackRequest;
 import io.seata.core.protocol.transaction.GlobalStatusRequest;
+import io.seata.core.rpc.hook.ServerHookTrigger;
 import io.seata.core.rpc.netty.ChannelManager;
 import io.seata.core.rpc.RemotingServer;
 import io.seata.core.rpc.RpcContext;
@@ -62,9 +63,9 @@ public class ServerOnRequestProcessor implements RemotingProcessor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ServerOnRequestProcessor.class);
 
-    private RemotingServer remotingServer;
+    private final RemotingServer remotingServer;
 
-    private TransactionMessageHandler transactionMessageHandler;
+    private final TransactionMessageHandler transactionMessageHandler;
 
     public ServerOnRequestProcessor(RemotingServer remotingServer, TransactionMessageHandler transactionMessageHandler) {
         this.remotingServer = remotingServer;
@@ -74,7 +75,21 @@ public class ServerOnRequestProcessor implements RemotingProcessor {
     @Override
     public void process(ChannelHandlerContext ctx, RpcMessage rpcMessage) throws Exception {
         if (ChannelManager.isRegistered(ctx.channel())) {
-            onRequestMessage(ctx, rpcMessage);
+            Throwable t = null;
+            try {
+                // trigger before process request
+                ServerHookTrigger.triggerBeforeProcessRequest(ctx, rpcMessage);
+
+                onRequestMessage(ctx, rpcMessage);
+            } catch (Throwable th) {
+                t = th;
+                // trigger after process request failed
+                ServerHookTrigger.triggerAfterProcessRequestFailed(ctx, rpcMessage, t);
+                throw th;
+            } finally {
+                // trigger after process request
+                ServerHookTrigger.triggerAfterProcessRequest(ctx, rpcMessage, t);
+            }
         } else {
             try {
                 if (LOGGER.isInfoEnabled()) {
