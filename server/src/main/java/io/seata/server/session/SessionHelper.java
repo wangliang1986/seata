@@ -161,14 +161,15 @@ public class SessionHelper {
      *
      * @param sessions the global sessions
      * @param handler  the handler
+     * @since 1.5.0
      */
-    public static void foreach(Collection<GlobalSession> sessions, GlobalSessionHandler handler) {
+    public static void forEach(Collection<GlobalSession> sessions, GlobalSessionHandler handler) {
         for (GlobalSession globalSession : sessions) {
             try {
                 MDC.put(RootContext.MDC_KEY_XID, globalSession.getXid());
                 handler.handle(globalSession);
-            } catch (Exception e) {
-                LOGGER.error("handle global session failed: {}", globalSession.getXid());
+            } catch (Throwable th) {
+                LOGGER.error("handle global session failed: {}", globalSession.getXid(), th);
             } finally {
                 MDC.remove(RootContext.MDC_KEY_XID);
             }
@@ -180,8 +181,9 @@ public class SessionHelper {
      *
      * @param sessions the branch session
      * @param handler  the handler
+     * @since 1.5.0
      */
-    public static Boolean foreach(Collection<BranchSession> sessions, BranchSessionHandler handler) throws TransactionException {
+    public static Boolean forEach(Collection<BranchSession> sessions, BranchSessionHandler handler) throws TransactionException {
         Boolean result;
         for (BranchSession branchSession : sessions) {
             try {
