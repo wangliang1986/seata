@@ -130,12 +130,12 @@
             <groupId>io.seata</groupId>
             <artifactId>seata-config-etcd3</artifactId>
             <version>${project.version}</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>io.seata</groupId>
             <artifactId>seata-config-spring-cloud</artifactId>
             <version>${project.version}</version>
-        </dependency>-->
+        </dependency>
         <dependency>
             <groupId>io.seata</groupId>
             <artifactId>seata-core</artifactId>
@@ -671,8 +671,8 @@
                                     <include>io.seata:seata-config-nacos</include>
                                     <!--<include>io.seata:seata-config-zk</include>
                                     <include>io.seata:seata-config-consul</include>
-                                    <include>io.seata:seata-config-etcd3</include>
-                                    <include>io.seata:seata-config-spring-cloud</include>-->
+                                    <include>io.seata:seata-config-etcd3</include>-->
+                                    <include>io.seata:seata-config-spring-cloud</include>
                                     <include>io.seata:seata-discovery-core</include>
                                     <!--<include>io.seata:seata-discovery-custom</include>
                                     <include>io.seata:seata-discovery-consul</include>-->
