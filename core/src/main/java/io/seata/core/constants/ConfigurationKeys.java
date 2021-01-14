@@ -159,6 +159,11 @@ public interface ConfigurationKeys {
     String CLIENT_TABLE_META_CHECK_ENABLE = CLIENT_RM_PREFIX + "tableMetaCheckEnable";
 
     /**
+     * The constant CLIENT_TABLE_META_CHECKER_INTERVAL.
+     */
+    String CLIENT_TABLE_META_CHECKER_INTERVAL = CLIENT_RM_PREFIX + "tableMetaCheckerInterval";
+
+    /**
      * The constant TCC_ACTION_INTERCEPTOR_ORDER.
      */
     String TCC_ACTION_INTERCEPTOR_ORDER = CLIENT_RM_PREFIX + "tccActionInterceptorOrder";
