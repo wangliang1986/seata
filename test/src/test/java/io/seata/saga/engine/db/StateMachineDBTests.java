@@ -34,6 +34,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -98,8 +99,11 @@ public class StateMachineDBTests extends AbstractServerTest {
 
         String stateMachineName = "simpleChoiceTestStateMachine";
 
-        stateMachineEngine.start(stateMachineName, null, paramMap);
-        System.out.println("test log2:" + stateMachineEngine);
+        try {
+            stateMachineEngine.start(stateMachineName, null, paramMap);
+        } catch (Throwable t) {
+            LoggerFactory.getLogger(this.getClass()).error("test log3:testSimpleStateMachineWithChoice", t);
+        }
 
         long cost = System.currentTimeMillis() - start;
         System.out.println("====== cost :" + cost);
