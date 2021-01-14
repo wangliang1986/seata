@@ -84,6 +84,7 @@ public class StateMachineDBTests extends AbstractServerTest {
     public void testSimpleStateMachine() {
         System.out.println("test log:" + stateMachineEngine);
         stateMachineEngine.start("simpleTestStateMachine", null, new HashMap<>());
+        System.out.println("test log2:" + stateMachineEngine);
     }
 
     @Test
@@ -98,6 +99,7 @@ public class StateMachineDBTests extends AbstractServerTest {
         String stateMachineName = "simpleChoiceTestStateMachine";
 
         stateMachineEngine.start(stateMachineName, null, paramMap);
+        System.out.println("test log2:" + stateMachineEngine);
 
         long cost = System.currentTimeMillis() - start;
         System.out.println("====== cost :" + cost);
@@ -105,6 +107,7 @@ public class StateMachineDBTests extends AbstractServerTest {
         start = System.currentTimeMillis();
         paramMap.put("a", 2);
         stateMachineEngine.start(stateMachineName, null, paramMap);
+        System.out.println("test log2:" + stateMachineEngine);
 
         cost = System.currentTimeMillis() - start;
         System.out.println("====== cost :" + cost);
@@ -123,6 +126,7 @@ public class StateMachineDBTests extends AbstractServerTest {
 
         try {
             stateMachineEngine.start(stateMachineName, null, paramMap);
+            System.out.println("test log2:" + stateMachineEngine);
         } catch (EngineExecutionException e) {
             Assertions.assertTrue(FrameworkErrorCode.StateMachineNoChoiceMatched.equals(e.getErrcode()));
             e.printStackTrace(System.out);
@@ -143,6 +147,7 @@ public class StateMachineDBTests extends AbstractServerTest {
         String stateMachineName = "simpleChoiceAndEndTestStateMachine";
 
         stateMachineEngine.start(stateMachineName, null, paramMap);
+        System.out.println("test log2:" + stateMachineEngine);
 
         long cost = System.currentTimeMillis() - start;
         System.out.println("====== cost :" + cost);
@@ -151,6 +156,7 @@ public class StateMachineDBTests extends AbstractServerTest {
 
         paramMap.put("a", 3);
         stateMachineEngine.start(stateMachineName, null, paramMap);
+        System.out.println("test log2:" + stateMachineEngine);
 
         cost = System.currentTimeMillis() - start;
         System.out.println("====== cost :" + cost);
@@ -168,6 +174,7 @@ public class StateMachineDBTests extends AbstractServerTest {
         String stateMachineName = "simpleInputAssignmentStateMachine";
 
         StateMachineInstance instance = stateMachineEngine.start(stateMachineName, null, paramMap);
+        System.out.println("test log2:" + stateMachineEngine);
 
         String businessKey = instance.getStateList().get(0).getBusinessKey();
         Assertions.assertNotNull(businessKey);
@@ -195,6 +202,7 @@ public class StateMachineDBTests extends AbstractServerTest {
         String stateMachineName = "simpleCachesStateMachine";
 
         StateMachineInstance inst = stateMachineEngine.start(stateMachineName, null, paramMap);
+        System.out.println("test log2:" + stateMachineEngine);
 
         long cost = System.currentTimeMillis() - start;
         System.out.println("====== cost :" + cost);
@@ -220,6 +228,7 @@ public class StateMachineDBTests extends AbstractServerTest {
         String stateMachineName = "simpleRetryStateMachine";
 
         StateMachineInstance inst = stateMachineEngine.start(stateMachineName, null, paramMap);
+        System.out.println("test log2:" + stateMachineEngine);
 
         long cost = System.currentTimeMillis() - start;
         System.out.println("====== cost :" + cost);
@@ -241,6 +250,7 @@ public class StateMachineDBTests extends AbstractServerTest {
         String stateMachineName = "simpleStatusMatchingStateMachine";
 
         StateMachineInstance inst = stateMachineEngine.start(stateMachineName, null, paramMap);
+        System.out.println("test log2:" + stateMachineEngine);
 
         long cost = System.currentTimeMillis() - start;
         System.out.println("====== cost :" + cost);
@@ -267,6 +277,7 @@ public class StateMachineDBTests extends AbstractServerTest {
         String stateMachineName = "simpleCompensationStateMachine";
 
         StateMachineInstance inst = stateMachineEngine.start(stateMachineName, null, paramMap);
+        System.out.println("test log2:" + stateMachineEngine);
 
         long cost = System.currentTimeMillis() - start;
         System.out.println("====== cost :" + cost);
@@ -293,6 +304,7 @@ public class StateMachineDBTests extends AbstractServerTest {
         String stateMachineName = "simpleStateMachineWithCompensationAndSubMachine";
 
         StateMachineInstance inst = stateMachineEngine.start(stateMachineName, null, paramMap);
+        System.out.println("test log2:" + stateMachineEngine);
 
         long cost = System.currentTimeMillis() - start;
         System.out.println("====== cost :" + cost);
@@ -317,6 +329,7 @@ public class StateMachineDBTests extends AbstractServerTest {
         String stateMachineName = "simpleStateMachineWithCompensationAndSubMachine_layout";
 
         StateMachineInstance inst = stateMachineEngine.start(stateMachineName, null, paramMap);
+        System.out.println("test log2:" + stateMachineEngine);
 
         long cost = System.currentTimeMillis() - start;
         System.out.println("====== cost :" + cost);
@@ -344,6 +357,7 @@ public class StateMachineDBTests extends AbstractServerTest {
         String stateMachineName = "simpleCompensationStateMachineForRecovery";
 
         StateMachineInstance inst = stateMachineEngine.start(stateMachineName, null, paramMap);
+        System.out.println("test log2:" + stateMachineEngine);
 
         long cost = System.currentTimeMillis() - start;
         System.out.println("====== cost :" + cost);
@@ -357,6 +371,7 @@ public class StateMachineDBTests extends AbstractServerTest {
             System.out.println("====== GlobalStatus: " + globalTransaction.getStatus());
             Thread.sleep(2000);
             inst = stateMachineEngine.getStateMachineConfig().getStateLogStore().getStateMachineInstance(inst.getId());
+            System.out.println("test log2:" + stateMachineEngine);
         }
     }
 
@@ -365,6 +380,7 @@ public class StateMachineDBTests extends AbstractServerTest {
         System.out.println("test log:" + stateMachineEngine);
         StateMachineInstance instance = stateMachineEngine.getStateMachineConfig().getStateLogStore().getStateMachineInstance(
                 "10.15.232.93:8091:2019567124");
+        System.out.println("test log2:" + stateMachineEngine);
         System.out.println(instance);
     }
 
@@ -380,6 +396,7 @@ public class StateMachineDBTests extends AbstractServerTest {
         String stateMachineName = "simpleStateMachineWithAsyncState";
 
         StateMachineInstance inst = stateMachineEngine.start(stateMachineName, null, paramMap);
+        System.out.println("test log2:" + stateMachineEngine);
 
         long cost = System.currentTimeMillis() - start;
         System.out.println("====== cost :" + cost);
@@ -406,6 +423,7 @@ public class StateMachineDBTests extends AbstractServerTest {
         String stateMachineName = "simpleCachesStateMachine";
 
         StateMachineInstance inst = stateMachineEngine.startAsync(stateMachineName, null, paramMap, callback);
+        System.out.println("test log2:" + stateMachineEngine);
 
         waittingForFinish(inst);
 
@@ -429,6 +447,7 @@ public class StateMachineDBTests extends AbstractServerTest {
         String stateMachineName = "simpleRetryStateMachine";
 
         StateMachineInstance inst = stateMachineEngine.startAsync(stateMachineName, null, paramMap, callback);
+        System.out.println("test log2:" + stateMachineEngine);
 
         waittingForFinish(inst);
 
@@ -453,6 +472,7 @@ public class StateMachineDBTests extends AbstractServerTest {
         String stateMachineName = "simpleStatusMatchingStateMachine";
 
         StateMachineInstance inst = stateMachineEngine.startAsync(stateMachineName, null, paramMap, callback);
+        System.out.println("test log2:" + stateMachineEngine);
 
         waittingForFinish(inst);
 
@@ -480,6 +500,7 @@ public class StateMachineDBTests extends AbstractServerTest {
         String stateMachineName = "simpleCompensationStateMachine";
 
         StateMachineInstance inst = stateMachineEngine.startAsync(stateMachineName, null, paramMap, callback);
+        System.out.println("test log2:" + stateMachineEngine);
 
         waittingForFinish(inst);
 
@@ -531,6 +552,7 @@ public class StateMachineDBTests extends AbstractServerTest {
 
                         try {
                             stateMachineEngine.startAsync(stateMachineName, null, paramMap, asyncCallback);
+                            System.out.println("test log2:" + stateMachineEngine);
                         } catch (Exception e) {
                             countDownLatch.countDown();
                             exceptions.add(e);
@@ -564,6 +586,7 @@ public class StateMachineDBTests extends AbstractServerTest {
         String stateMachineName = "simpleStateMachineWithCompensationAndSubMachine";
 
         StateMachineInstance inst = stateMachineEngine.startAsync(stateMachineName, null, paramMap, callback);
+        System.out.println("test log2:" + stateMachineEngine);
 
         waittingForFinish(inst);
 
@@ -591,6 +614,7 @@ public class StateMachineDBTests extends AbstractServerTest {
         String stateMachineName = "simpleStateMachineWithCompensationAndSubMachine_layout";
 
         StateMachineInstance inst = stateMachineEngine.startAsync(stateMachineName, null, paramMap, callback);
+        System.out.println("test log2:" + stateMachineEngine);
 
         waittingForFinish(inst);
 
@@ -616,6 +640,7 @@ public class StateMachineDBTests extends AbstractServerTest {
         String stateMachineName = "simpleStateMachineWithAsyncState";
 
         StateMachineInstance inst = stateMachineEngine.startAsync(stateMachineName, null, paramMap, callback);
+        System.out.println("test log2:" + stateMachineEngine);
 
         waittingForFinish(inst);
 
@@ -647,6 +672,7 @@ public class StateMachineDBTests extends AbstractServerTest {
         System.out.println("test log:" + stateMachineEngine);
 
         ((DefaultStateMachineConfig)stateMachineEngine.getStateMachineConfig()).setTransOperationTimeout(2000);
+        System.out.println("test log2:" + stateMachineEngine);
 
         //first state timeout
         Map<String, Object> paramMap = new HashMap<>(3);
@@ -694,6 +720,7 @@ public class StateMachineDBTests extends AbstractServerTest {
         doTestStateMachineTransTimeout(paramMap);
 
         ((DefaultStateMachineConfig)stateMachineEngine.getStateMachineConfig()).setTransOperationTimeout(60000 * 30);
+        System.out.println("test log2:" + stateMachineEngine);
     }
 
     @Test
