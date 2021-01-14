@@ -58,11 +58,10 @@ public class StateMachineDBTests extends AbstractServerTest {
 
     @BeforeAll
     public static void initApplicationContext() throws InterruptedException {
-
         startSeataServer();
-
         ApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:saga/spring/statemachine_engine_db_test.xml");
-        stateMachineEngine = applicationContext.getBean("stateMachineEngine", StateMachineEngine.class);
+        stateMachineEngine = applicationContext.getBean(StateMachineEngine.class);
+        System.out.println("test log:" + stateMachineEngine);
     }
 
     private GlobalTransaction getGlobalTransaction(StateMachineInstance instance) {
