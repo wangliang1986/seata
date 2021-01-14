@@ -82,12 +82,13 @@ public class StateMachineDBTests extends AbstractServerTest {
 
     @Test
     public void testSimpleStateMachine() {
-
+        System.out.println("test log:" + stateMachineEngine);
         stateMachineEngine.start("simpleTestStateMachine", null, new HashMap<>());
     }
 
     @Test
     public void testSimpleStateMachineWithChoice() {
+        System.out.println("test log:" + stateMachineEngine);
 
         long start = System.currentTimeMillis();
 
@@ -111,6 +112,7 @@ public class StateMachineDBTests extends AbstractServerTest {
 
     @Test
     public void testSimpleStateMachineWithChoiceNoDefault() {
+        System.out.println("test log:" + stateMachineEngine);
 
         long start = System.currentTimeMillis();
 
@@ -131,6 +133,7 @@ public class StateMachineDBTests extends AbstractServerTest {
 
     @Test
     public void testSimpleStateMachineWithChoiceAndEnd() {
+        System.out.println("test log:" + stateMachineEngine);
 
         long start = System.currentTimeMillis();
 
@@ -155,6 +158,7 @@ public class StateMachineDBTests extends AbstractServerTest {
 
     @Test
     public void testSimpleInputAssignmentStateMachine() {
+        System.out.println("test log:" + stateMachineEngine);
 
         long start = System.currentTimeMillis();
 
@@ -180,6 +184,7 @@ public class StateMachineDBTests extends AbstractServerTest {
 
     @Test
     public void testSimpleCatchesStateMachine() throws Exception {
+        System.out.println("test log:" + stateMachineEngine);
 
         long start = System.currentTimeMillis();
 
@@ -204,6 +209,7 @@ public class StateMachineDBTests extends AbstractServerTest {
 
     @Test
     public void testSimpleRetryStateMachine() {
+        System.out.println("test log:" + stateMachineEngine);
 
         long start  = System.currentTimeMillis();
 
@@ -224,6 +230,7 @@ public class StateMachineDBTests extends AbstractServerTest {
 
     @Test
     public void testStatusMatchingStateMachine() throws Exception {
+        System.out.println("test log:" + stateMachineEngine);
 
         long start = System.currentTimeMillis();
 
@@ -249,6 +256,7 @@ public class StateMachineDBTests extends AbstractServerTest {
 
     @Test
     public void testCompensationStateMachine() throws Exception {
+        System.out.println("test log:" + stateMachineEngine);
 
         long start = System.currentTimeMillis();
 
@@ -274,6 +282,7 @@ public class StateMachineDBTests extends AbstractServerTest {
 
     @Test
     public void testCompensationAndSubStateMachine() throws Exception {
+        System.out.println("test log:" + stateMachineEngine);
 
         long start = System.currentTimeMillis();
 
@@ -297,6 +306,7 @@ public class StateMachineDBTests extends AbstractServerTest {
 
     @Test
     public void testCompensationAndSubStateMachineLayout() throws Exception {
+        System.out.println("test log:" + stateMachineEngine);
 
         long start = System.currentTimeMillis();
 
@@ -320,6 +330,7 @@ public class StateMachineDBTests extends AbstractServerTest {
 
     @Test
     public void testCompensationStateMachineForRecovery() throws Exception {
+        System.out.println("test log:" + stateMachineEngine);
 
         long start = System.currentTimeMillis();
 
@@ -351,6 +362,7 @@ public class StateMachineDBTests extends AbstractServerTest {
 
     @Test
     public void testReloadStateMachineInstance() {
+        System.out.println("test log:" + stateMachineEngine);
         StateMachineInstance instance = stateMachineEngine.getStateMachineConfig().getStateLogStore().getStateMachineInstance(
                 "10.15.232.93:8091:2019567124");
         System.out.println(instance);
@@ -358,6 +370,7 @@ public class StateMachineDBTests extends AbstractServerTest {
 
     @Test
     public void testSimpleStateMachineWithAsyncState() {
+        System.out.println("test log:" + stateMachineEngine);
 
         long start = System.currentTimeMillis();
 
@@ -382,6 +395,7 @@ public class StateMachineDBTests extends AbstractServerTest {
 
     @Test
     public void testSimpleCatchesStateMachineAsync() throws Exception {
+        System.out.println("test log:" + stateMachineEngine);
 
         long start = System.currentTimeMillis();
 
@@ -404,6 +418,7 @@ public class StateMachineDBTests extends AbstractServerTest {
 
     @Test
     public void testSimpleRetryStateMachineAsync() {
+        System.out.println("test log:" + stateMachineEngine);
 
         long start  = System.currentTimeMillis();
 
@@ -427,6 +442,7 @@ public class StateMachineDBTests extends AbstractServerTest {
 
     @Test
     public void testStatusMatchingStateMachineAsync() throws Exception {
+        System.out.println("test log:" + stateMachineEngine);
 
         long start = System.currentTimeMillis();
 
@@ -453,6 +469,7 @@ public class StateMachineDBTests extends AbstractServerTest {
 
     @Disabled("https://github.com/seata/seata/issues/2564")
     public void testCompensationStateMachineAsync() throws Exception {
+        System.out.println("test log:" + stateMachineEngine);
 
         long start = System.currentTimeMillis();
 
@@ -480,6 +497,7 @@ public class StateMachineDBTests extends AbstractServerTest {
     @Test
     @Disabled("https://github.com/seata/seata/issues/2414#issuecomment-639546811")
     public void simpleChoiceTestStateMachineAsyncConcurrently() throws Exception {
+        System.out.println("test log:" + stateMachineEngine);
 
         final CountDownLatch countDownLatch = new CountDownLatch(100);
         final List<Exception> exceptions = new ArrayList<>();
@@ -535,6 +553,7 @@ public class StateMachineDBTests extends AbstractServerTest {
     @Test
     @Disabled("https://github.com/seata/seata/issues/2414#issuecomment-651526068")
     public void testCompensationAndSubStateMachineAsync() throws Exception {
+        System.out.println("test log:" + stateMachineEngine);
 
         long start = System.currentTimeMillis();
 
@@ -561,6 +580,7 @@ public class StateMachineDBTests extends AbstractServerTest {
     @Test
     @Disabled("https://github.com/seata/seata/issues/2414#issuecomment-640432396")
     public void testCompensationAndSubStateMachineAsyncWithLayout() throws Exception {
+        System.out.println("test log:" + stateMachineEngine);
 
         long start = System.currentTimeMillis();
 
@@ -586,6 +606,7 @@ public class StateMachineDBTests extends AbstractServerTest {
 
     @Test
     public void testAsyncStartSimpleStateMachineWithAsyncState() {
+        System.out.println("test log:" + stateMachineEngine);
 
         long start = System.currentTimeMillis();
 
@@ -623,6 +644,7 @@ public class StateMachineDBTests extends AbstractServerTest {
 
     @Test
     public void testStateMachineTransTimeout() throws Exception {
+        System.out.println("test log:" + stateMachineEngine);
 
         ((DefaultStateMachineConfig)stateMachineEngine.getStateMachineConfig()).setTransOperationTimeout(2000);
 
@@ -676,6 +698,7 @@ public class StateMachineDBTests extends AbstractServerTest {
 
     @Test
     public void testStateMachineTransTimeoutAsync() throws Exception {
+        System.out.println("test log:" + stateMachineEngine);
 
         ((DefaultStateMachineConfig)stateMachineEngine.getStateMachineConfig()).setTransOperationTimeout(2000);
 
@@ -729,6 +752,7 @@ public class StateMachineDBTests extends AbstractServerTest {
 
     @Test
     public void testStateMachineRecordFailed() {
+        System.out.println("test log:" + stateMachineEngine);
 
         String businessKey = "bizKey";
 
@@ -741,6 +765,7 @@ public class StateMachineDBTests extends AbstractServerTest {
 
     @Test
     public void testSimpleRetryStateAsUpdateMode() throws Exception {
+        System.out.println("test log:" + stateMachineEngine);
         long start  = System.currentTimeMillis();
 
         Map<String, Object> paramMap = new HashMap<>(1);
@@ -764,6 +789,7 @@ public class StateMachineDBTests extends AbstractServerTest {
 
     @Test
     public void testSimpleCompensateStateAsUpdateMode() throws Exception {
+        System.out.println("test log:" + stateMachineEngine);
         long start  = System.currentTimeMillis();
 
         Map<String, Object> paramMap = new HashMap<>(1);
@@ -788,6 +814,7 @@ public class StateMachineDBTests extends AbstractServerTest {
 
     @Test
     public void testSimpleSubRetryStateAsUpdateMode() throws Exception {
+        System.out.println("test log:" + stateMachineEngine);
         long start  = System.currentTimeMillis();
 
         Map<String, Object> paramMap = new HashMap<>(1);
@@ -811,6 +838,7 @@ public class StateMachineDBTests extends AbstractServerTest {
 
     @Test
     public void testSimpleSubCompensateStateAsUpdateMode() throws Exception {
+        System.out.println("test log:" + stateMachineEngine);
         long start  = System.currentTimeMillis();
 
         Map<String, Object> paramMap = new HashMap<>(1);
@@ -833,6 +861,7 @@ public class StateMachineDBTests extends AbstractServerTest {
     }
 
     private void doTestStateMachineTransTimeout(Map<String, Object> paramMap) throws Exception {
+        System.out.println("test log:" + stateMachineEngine);
 
         long start = System.currentTimeMillis();
 
@@ -867,6 +896,7 @@ public class StateMachineDBTests extends AbstractServerTest {
     }
 
     private void doTestStateMachineTransTimeoutAsync(Map<String, Object> paramMap) throws Exception {
+        System.out.println("test log:" + stateMachineEngine);
 
         long start = System.currentTimeMillis();
 
@@ -898,6 +928,7 @@ public class StateMachineDBTests extends AbstractServerTest {
 
     @Disabled
     public void testStateMachineCustomRecoverStrategyOnTimeout() throws Exception {
+        System.out.println("test log:" + stateMachineEngine);
 
         ((DefaultStateMachineConfig)stateMachineEngine.getStateMachineConfig()).setTransOperationTimeout(2000);
 
@@ -950,6 +981,7 @@ public class StateMachineDBTests extends AbstractServerTest {
     }
 
     private void doTestStateMachineCustomRecoverStrategyOnTimeout(Map<String, Object> paramMap) throws Exception {
+        System.out.println("test log:" + stateMachineEngine);
 
         long start = System.currentTimeMillis();
 
@@ -986,6 +1018,7 @@ public class StateMachineDBTests extends AbstractServerTest {
 
     @Disabled
     public void testStateMachineCustomRecoverStrategyOnTimeoutAsync() throws Exception {
+        System.out.println("test log:" + stateMachineEngine);
 
         ((DefaultStateMachineConfig)stateMachineEngine.getStateMachineConfig()).setTransOperationTimeout(2000);
 
@@ -1038,6 +1071,7 @@ public class StateMachineDBTests extends AbstractServerTest {
     }
 
     private void doTestStateMachineCustomRecoverStrategyOnTimeoutAsync(Map<String, Object> paramMap) throws Exception {
+        System.out.println("test log:" + stateMachineEngine);
 
         long start = System.currentTimeMillis();
 
