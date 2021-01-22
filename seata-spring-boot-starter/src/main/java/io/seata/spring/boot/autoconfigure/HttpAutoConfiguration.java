@@ -17,13 +17,16 @@ package io.seata.spring.boot.autoconfigure;
 
 import io.seata.integration.http.HttpHandlerExceptionResolver;
 import io.seata.integration.http.TransactionPropagationInterceptor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.util.List;
+
+import static io.seata.spring.boot.autoconfigure.StarterConstants.SEATA_PREFIX;
 
 /**
  * Auto bean add for spring context if in springboot env.
@@ -32,7 +35,8 @@ import java.util.List;
  */
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnWebApplication
-public class HttpAutoConfiguration implements WebMvcConfigurer {
+@ConditionalOnProperty(prefix = SEATA_PREFIX, name = "enabled", matchIfMissing = true)
+public class HttpAutoConfiguration extends WebMvcConfigurerAdapter {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
