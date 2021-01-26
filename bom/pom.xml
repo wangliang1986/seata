@@ -73,7 +73,7 @@
     </scm>
 
     <properties>
-        <spring.version>5.3.3.RELEASE</spring.version>
+        <spring.version>5.3.3</spring.version>
         <netty4.version>4.1.30.Final</netty4.version>
         <dubbo.version>2.7.0</dubbo.version>
         <dubbo.alibaba.version>2.6.5</dubbo.alibaba.version>
