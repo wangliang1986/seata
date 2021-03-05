@@ -40,6 +40,10 @@ import io.seata.server.store.StoreConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static io.seata.core.model.GlobalStatus.AsyncCommitting;
+import static io.seata.core.model.GlobalStatus.CommitRetrying;
+import static io.seata.core.model.GlobalStatus.Committing;
+
 /**
  * The type Global session.
  *
@@ -213,7 +217,9 @@ public class GlobalSession implements SessionLifecycle, SessionStorable {
 
     public void clean() throws TransactionException {
         if (this.hasATBranch()) {
-            LockerManagerFactory.getLockManager().releaseGlobalSessionLock(this);
+            if (!LockerManagerFactory.getLockManager().releaseGlobalSessionLock(this)) {
+                throw new TransactionException("UnLock globalSession error, xid = " + this.xid);
+            }
         }
     }
 
@@ -256,8 +262,12 @@ public class GlobalSession implements SessionLifecycle, SessionStorable {
 
     @Override
     public void removeBranch(BranchSession branchSession) throws TransactionException {
-        if (!branchSession.unlock()) {
-            throw new TransactionException(String.format("unlock failed, xid: %s, branchId: %s", branchSession.getXid(), branchSession.getBranchId()));
+        // do not unlock if global status in (Committing, CommitRetrying, AsyncCommitting),
+        // because it's already unlocked in 'DefaultCore.commit()'
+        if (status != Committing && status != CommitRetrying && status != AsyncCommitting) {
+            if (!branchSession.unlock()) {
+                throw new TransactionException("Unlock branch lock failed, xid = " + this.xid + ", branchId = " + branchSession.getBranchId());
+            }
         }
         for (SessionLifecycleListener lifecycleListener : lifecycleListeners) {
             lifecycleListener.onRemoveBranch(this, branchSession);
