@@ -213,6 +213,7 @@ public class DefaultStateMachineConfig implements StateMachineConfig, Applicatio
             SpringBeanServiceInvoker springBeanServiceInvoker = new SpringBeanServiceInvoker();
             springBeanServiceInvoker.setApplicationContext(getApplicationContext());
             springBeanServiceInvoker.setThreadPoolExecutor(threadPoolExecutor);
+            springBeanServiceInvoker.setSagaJsonParser(getSagaJsonParser());
             this.serviceInvokerManager.putServiceInvoker(DomainConstants.SERVICE_TYPE_SPRING_BEAN,
                 springBeanServiceInvoker);
         }

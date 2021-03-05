@@ -97,6 +97,7 @@ seata:
     load-balance-virtual-nodes: 10
     consul:
       server-addr: 127.0.0.1:8500
+      acl-token: ""
     etcd3:
       server-addr: http://127.0.0.1:2379
     eureka:
