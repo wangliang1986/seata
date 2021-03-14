@@ -324,7 +324,7 @@ public class JacksonUndoLogParser implements UndoLogParser, Initialize {
         public void serializeWithType(LocalDateTime localDateTime, JsonGenerator gen, SerializerProvider serializers,
                                       TypeSerializer typeSer) throws IOException {
             WritableTypeId typeIdDef = typeSer.writeTypePrefix(gen,
-                    typeSer.typeId(localDateTime, JsonToken.VALUE_EMBEDDED_OBJECT));
+                    typeSer.typeId(localDateTime, JsonToken.VALUE_NUMBER_INT));
             serialize(localDateTime, gen, serializers);
             typeSer.writeTypeSuffix(gen, typeIdDef);
         }
@@ -339,6 +339,9 @@ public class JacksonUndoLogParser implements UndoLogParser, Initialize {
         }
     }
 
+    /**
+     * the class of deserialize LocalDateTime type
+     */
     private static class LocalDateTimeDeserializer extends JsonDeserializer<LocalDateTime> {
 
         @Override
@@ -347,7 +350,7 @@ public class JacksonUndoLogParser implements UndoLogParser, Initialize {
                 long timestamp = p.getLongValue();
                 return LocalDateTime.ofEpochSecond(timestamp / 1000, 0, ZoneOffset.ofHours(8));
             } catch (Exception e) {
-                LOGGER.error("deserialize java.sql.Clob error : {}", e.getMessage(), e);
+                LOGGER.error("deserialize java.time.LocalDateTime error : {}", e.getMessage(), e);
             }
             return null;
         }
