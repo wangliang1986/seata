@@ -15,6 +15,8 @@
  */
 package io.seata.rm.datasource.undo.parser;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -100,6 +102,16 @@ public class JacksonUndoLogParser implements UndoLogParser, Initialize {
      */
     private final JsonDeserializer clobDeserializer = new ClobDeserializer();
 
+    /**
+     * customize serializer of java.time.LocalDateTime
+     */
+    private final JsonSerializer localDateTimeSerializer = new LocalDateTimeSerializer();
+
+    /**
+     * customize deserializer of java.time.LocalDateTime
+     */
+    private final JsonDeserializer localDateTimeDeserializer = new LocalDateTimeDeserializer();
+
     @Override
     public void init() {
         try {
@@ -130,6 +142,8 @@ public class JacksonUndoLogParser implements UndoLogParser, Initialize {
         module.addDeserializer(SerialBlob.class, blobDeserializer);
         module.addSerializer(SerialClob.class, clobSerializer);
         module.addDeserializer(SerialClob.class, clobDeserializer);
+        module.addSerializer(LocalDateTime.class, localDateTimeSerializer);
+        module.addDeserializer(LocalDateTime.class, localDateTimeDeserializer);
         mapper.registerModule(module);
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
@@ -295,6 +309,44 @@ public class JacksonUndoLogParser implements UndoLogParser, Initialize {
                 return new SerialClob(p.getValueAsString().toCharArray());
 
             } catch (SQLException e) {
+                LOGGER.error("deserialize java.sql.Clob error : {}", e.getMessage(), e);
+            }
+            return null;
+        }
+    }
+
+    /**
+     * the class of serialize LocalDateTime type
+     */
+    private static class LocalDateTimeSerializer extends JsonSerializer<LocalDateTime> {
+
+        @Override
+        public void serializeWithType(LocalDateTime localDateTime, JsonGenerator gen, SerializerProvider serializers,
+                                      TypeSerializer typeSer) throws IOException {
+            WritableTypeId typeIdDef = typeSer.writeTypePrefix(gen,
+                    typeSer.typeId(localDateTime, JsonToken.VALUE_EMBEDDED_OBJECT));
+            serialize(localDateTime, gen, serializers);
+            typeSer.writeTypeSuffix(gen, typeIdDef);
+        }
+
+        @Override
+        public void serialize(LocalDateTime localDateTime, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+            try {
+                gen.writeNumber(localDateTime.toInstant(ZoneOffset.ofHours(8)).toEpochMilli());
+            } catch (IOException e) {
+                LOGGER.error("serialize java.time.LocalDateTime error : {}", e.getMessage(), e);
+            }
+        }
+    }
+
+    private static class LocalDateTimeDeserializer extends JsonDeserializer<LocalDateTime> {
+
+        @Override
+        public LocalDateTime deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+            try {
+                long timestamp = p.getLongValue();
+                return LocalDateTime.ofEpochSecond(timestamp / 1000, 0, ZoneOffset.ofHours(8));
+            } catch (Exception e) {
                 LOGGER.error("deserialize java.sql.Clob error : {}", e.getMessage(), e);
             }
             return null;
